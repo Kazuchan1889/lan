@@ -1,0 +1,9 @@
+duplicate db:
+
+1.pg_dump -U postgres -h localhost -p 5432 -d hbm > hbm_backup.sql
+
+copy to local:
+
+1.create new db
+
+2.cmd : psql -U postgres -h localhost -d test -a -f hbm_backup12012024.sql
