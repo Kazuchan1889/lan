@@ -21,7 +21,7 @@ function findSameNumbers(obj1, obj2) {
     const list1 = Array.isArray(obj1.lists) ? obj1.lists : [];
     const list2 = Array.isArray(obj2.lists) ? obj2.lists : [];
     const sameNumbers = list1.filter(number => list2.includes(number));
-    return sameNumbers.length === list1.length && sameNumbers.length === list2.length ? sameNumbers : false;
+    return sameNumbers.length === list1.length && sameNumbers.length === list2.length ? sameNumbers : true;
 }
 
 const getCompanyFile = async (req, res) => {
@@ -65,23 +65,27 @@ const uploadCompanyFile = async (req, res) => {
         access_list = []
     } = req.body;
 
+    if (!karyawan_file) {
+        return res.status(400).send("karyawan_file is required");
+    }
+
     try {
         const acc_list = { lists: access_list };
         const getIdlist = await pool.query(`SELECT json_agg(id) AS lists FROM karyawan;`);
-        console.log(acc_list);
-        console.log(getIdlist.rows[0]);
-        console.log(findSameNumbers(acc_list, getIdlist.rows[0]));
-
-        if (findSameNumbers(acc_list, getIdlist.rows[0]) === false) {
+        
+        if (!findSameNumbers(acc_list, getIdlist.rows[0])) {
             return res.status(400).send("karyawan tidak ditemukan");
         }
 
+        // Ensure access_list is passed as a proper array to PostgreSQL
         await pool.query(queries.uploadingfile[0], [req.userId, nama_file, karyawan_file, tanggal_publish, access_list]);
         return res.status(200).send("Success");
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
 };
+
+
 
 const uploadOtherFile = async (req, res) => {
     if (check.checkOperation("ADD_KARYAWAN", req.userOperation, res)) return;
