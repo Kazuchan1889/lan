@@ -115,14 +115,14 @@ const patchSchedule = async(req, res)=>{
       selesai,
       judul,
       deskripsi,
-      karyawan = Int8Array
+      karyawan,
   }=req.body
   
   try{
       /*untuk sekarang query findPost digunakan untuk mengecek apakah tipe yang ada merupakan true
       dikarenakan tipe true berarti dibuat untuk schedule sedangkan false dapat digunakan untuk jadwal yang
       didapatkan dari googleapi */
-      const findPost = await pool.query(`select * from schedule_cal where id=${statusId} and tipe is true`);
+      const findPost = await pool.query(`select * from scheduler where id=${statusId} and tipe is true`);
       if(findPost.rowCount<1){
           return res.status(204).send("post tidak ditemukan");
       }
