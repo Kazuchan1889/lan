@@ -66,7 +66,7 @@ const postScheduler = async(req,res)=>{
     mulai,
     selesai,
     //jika tidak ingin assign karyawan bikin saja null
-    karyawan = Int8Array
+    karyawan,
   } = req.body;
   if(req.userRole!="admin"){
     return res.status(401).send("Akses ditolak");
@@ -187,19 +187,24 @@ const deleteAssignedPerson = async(req,res)=>{
   }
 };
 
-const deleteScheduler = async(req,res)=>{
-  try{
+const deleteScheduler = async (req, res) => {
+  try {
     const schedulerId = req.params.Id;
-    const findSchedule = await pool.query(`select id from schedule_cal where tipe = true and id = ${schedulerId};`);
-    if(findSchedule>0){
-      await pool.query(`delete from scheduler where schedule_id = ${schedulerId};`);
-      await pool.query(`delete from schedule_cal where id = ${schedulerId} and tipe is true;`);
-    }else{
-      return res.status(204).send("schedule not found");
-    }
+    const findSchedule = await pool.query(
+      `SELECT id FROM schedule_cal WHERE tipe = true AND id = $1;`,
+      [schedulerId]
+    );
 
-  }catch(error){
-    res.send(error);
+    if (findSchedule.rows.length > 0) {
+      await pool.query(`DELETE FROM scheduler WHERE schedule_id = $1;`, [schedulerId]);
+      await pool.query(`DELETE FROM schedule_cal WHERE id = $1 AND tipe = true;`, [schedulerId]);
+      res.status(200).send("Schedule deleted successfully");
+    } else {
+      return res.status(204).send("Schedule not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
   }
 };
 

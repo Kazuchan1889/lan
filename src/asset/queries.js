@@ -1,5 +1,5 @@
 const postAsset =  `insert into asset(nama_barang,merek,model_tipe,harga,jumlah) values($1,$2,$3,$4,$5);`;
-const getAsset = `select nama_barang, merek, model_tipe, cast(harga as money), jumlah from asset;`;
+const getAsset = `select nama_barang, merek, model_tipe, cast(harga as money), jumlah, cast((harga * jumlah) as money) as hargaTotal from asset;`;
 const checkAsset = `select * from asset 
 where nama_barang ilike($1) 
 and merek ilike($2)

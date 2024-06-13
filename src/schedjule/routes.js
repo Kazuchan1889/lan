@@ -8,7 +8,7 @@ router.use(verifyToken);
 
 //get
 router.get("/calendar",cont.getGoogleCalendar);
-router.get("/scheduler/assigned",cont.getSchedulerAssigned);
+router.get("/assigned",cont.getSchedulerAssigned);
 router.get("/scheduler/assigned/:Id",cont.getSchedulerById);
 router.get("/scheduler/assigned/karyawan/:Id",cont.getSchedulerByKaryawanId);
 
