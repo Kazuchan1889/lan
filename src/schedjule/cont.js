@@ -122,31 +122,31 @@ const patchSchedule = async(req, res)=>{
       /*untuk sekarang query findPost digunakan untuk mengecek apakah tipe yang ada merupakan true
       dikarenakan tipe true berarti dibuat untuk schedule sedangkan false dapat digunakan untuk jadwal yang
       didapatkan dari googleapi */
-      const findPost = await pool.query(`select * from scheduler where id=${statusId} and tipe is true`);
-      if(findPost.rowCount<1){
-          return res.status(204).send("post tidak ditemukan");
-      }
+      // const findPost = await pool.query(`select * from scheduler where id=${statusId} and tipe is true`);
+      // if(findPost.rowCount<1){
+      //     return res.status(204).send("post tidak ditemukan");
+      // }
       await pool.query(queries.patchApprove,[tanggal_mulai,tanggal_selesai,mulai,selesai,judul,deskripsi,statusId]);
-      if(karyawan.length>0){
-        for (let index = 0; index < karyawan.length; index++) {
-          const temp = await pool.query(queries.getAssignedScheduler,[karyawan[index],statusId]);
-          if(temp.rowCount>0){
-            console.log("Already Assigned");
-            continue;
-          }else{
-            await pool.query(queries.postAssign,[karyawan[index],statusId]);
-          }
+      // if(karyawan.length > 0){
+      //   for (let index = 0; index < karyawan.length; index++) {
+      //     const temp = await pool.query(queries.getAssignedScheduler,[karyawan[index],statusId]);
+      //     if(temp.rowCount>0){
+      //       console.log("Already Assigned");
+      //       continue;
+      //     }else{
+      //       await pool.query(queries.postAssign,[karyawan[index],statusId]);
+      //     }
           
-          // console.log(index);
+      //     // console.log(index);
           
-        }
-      }
+      //   }
+      // }
 
-      // pool.query(queries.postAssign,[])
-      console.log("Updated "+findPost.rows[0].judul);
+      // // pool.query(queries.postAssign,[])
+      // console.log("Updated"+findPost.rows[0].judul);
       return res.status(200).send("Updated");
   }catch(error){
-      return res.send("something went wrong");
+      return res.send(error);
   }
 
 }
