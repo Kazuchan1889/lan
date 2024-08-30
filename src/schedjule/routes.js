@@ -4,6 +4,7 @@ const verifyToken = require("../../verifyToken");
 /// ip:port/api/absensi
 const router = Router();
 
+
 router.use(verifyToken);
 
 //get

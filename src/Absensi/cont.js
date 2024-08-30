@@ -199,24 +199,28 @@ const patchInOutByID = (req, res) => {
   const id = req.userId;
   const date = new Date();
   const condition = req.params.condition;
-
+  const { fotomasuk, fotokeluar } = req.body;
   date.setUTCHours(date.getUTCHours() + 7);
-  // console.log(date)
+
   pool.query(
     "select * from absensi where idk = $1 and date = $2",
     [id, date],
     (err, result) => {
-      if (err) throw err;
+      if (err) {
+        console.error('Database query error:', err);
+        return res.status(500).send('Internal Server Error');
+      }
 
       if (result.rowCount === 0) {
         pool.query(
           "insert into absensi (idk,date,status) values ($1,$2,$3) returning *",
           [id, date, "tanpa alasan"],
           (err2, result2) => {
-            if (err2) throw err2;
-
-            // Continue the process after inserting the data
-            processCondition(condition, id, date, res);
+            if (err2) {
+              console.error('Database insert error:', err2);
+              return res.status(500).send('Internal Server Error');
+            }
+            processCondition(condition, fotomasuk, fotokeluar, id, date, res);
           }
         );
       } else {
@@ -228,7 +232,7 @@ const patchInOutByID = (req, res) => {
           status === "tanpa alasan" ||
           status === "terlambat"
         ) {
-          processCondition(condition, id, date, res); // Only call when status is null
+          processCondition(condition, fotomasuk, fotokeluar, id, date, res); 
         } else {
           res.status(200).send(`sudah ada absensi dengan status ${status}`);
         }
@@ -237,7 +241,7 @@ const patchInOutByID = (req, res) => {
   );
 };
 
-function processCondition(condition, id, date, res) {
+function processCondition(condition,fotomasuk,fotokeluar, id, date, res) {
   if (condition == "masuk") {
     pool.query(
       "select * from absensi where idk =$1 and date = $2 and masuk is not null",
@@ -256,7 +260,7 @@ function processCondition(condition, id, date, res) {
           //console.log(checkStatus,status)
           pool.query(
             queries.patchAbsensiByID[0],
-            [status, id, date],
+            [status, fotomasuk, id, date],
             (err, result) => {
               if (err) throw err;
               // console.log(result.rows)
@@ -289,7 +293,7 @@ function processCondition(condition, id, date, res) {
         if (result0.rowCount > 0) {
           res.status(200).send("lu udah keluar");
         } else {
-          pool.query(queries.patchAbsensiByID[1], [id, date], (err, result) => {
+          pool.query(queries.patchAbsensiByID[1], [fotokeluar ,id, date], (err, result) => {
             if (err) throw err;
             // console.log(result.rows)
             res.status(200).send("user keluar");

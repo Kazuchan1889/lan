@@ -4,6 +4,7 @@ const getAbsensiDated = `
   select
   ab.id as id,
   kn.nama as nama,
+  kn.dokumen as photo,
   TO_CHAR(ab.masuk::time, 'HH24:MI') as masuk,
   TO_CHAR(ab.keluar::time, 'HH24:MI') as keluar,
   ab.status as status,
@@ -37,15 +38,17 @@ const checkAbsensiTodaySelf = `select
     status,
     to_char(masuk::time,'HH24:MI') as masuk,
     to_char(keluar::time,'HH24:MI') as keluar,
-    to_char(now()::time,'HH24:MI:SS') as currtime
+    to_char(now()::time,'HH24:MI:SS') as currtime,
+    fotomasuk,
+    fotokeluar
     from absensi
     where idk = $1
     and date = $2
     `;
 
 const patchAbsensiByID = [
-  "update absensi set masuk = now(), status = $1 where idk = $2 and date = $3 returning *",
-  "update absensi set keluar = now() where idk = $1 and date = $2 returning *",
+  "update absensi set masuk = now(), status = $1, fotomasuk = $2 where idk = $3 and date = $4 returning *",
+  "update absensi set keluar = now(), fotokeluar =$1 where idk = $2 and date = $3 returning *",
 ];
 
 const postAbsensiToday = [
