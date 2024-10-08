@@ -384,7 +384,7 @@ const getPengajuanDated = (req, res) => {
 const postPengajuan = async (req, res) => {
   if (check.checkOperation("SELF_FORM", req.userOperation, res)) return;
 
-  const { mulai, selesai, alasan } = req.body;
+  const { mulai, selesai, alasan } = req.body;  
 
   console.log(new Date(mulai), new Date(selesai));
   if (new Date(mulai) > new Date(selesai))
