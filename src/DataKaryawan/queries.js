@@ -1,7 +1,7 @@
 //karyawan
 const getDataKaryawan =
   "select id,nama,jabatan,status,dokumen from karyawan order by nama";
-const   getDataKaryawanById = "select * from karyawan where id = $1";
+const getDataKaryawanById = "select * from karyawan where id = $1";
 const getDataKaryawanStatus = "select id from karyawan where status = $1";
 const getDataKaryawanGender = "select id from karyawan where gender = $1";
 const getJobLevel = " select level from karyawan where level = $1 ";

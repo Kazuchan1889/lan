@@ -16,7 +16,7 @@ const postBioData = `insert into biodata(
     taxperson_npwp_16_digit,       
     hq_initial,
     hq_code,
-    show_branch_name,
+    show_branch_name,   
     umr,
     umr_province,
     umr_city,

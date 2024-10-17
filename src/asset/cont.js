@@ -69,6 +69,8 @@ const patchAssetById = async(req,res)=>{
     }
 };
 
+//pernah ga siluh pernahh
+
 const deleteAsset = async(req,res)=>{
     try{
         await pool.query(`delete from asset where id = ${req.params.Id}`);

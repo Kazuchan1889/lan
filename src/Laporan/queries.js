@@ -51,7 +51,7 @@ insert into laporan
 const excelLaporan = `select k.nama as nama,
 TO_CHAR(l.date, 'DD/MM/YYYY') as "Tanggal Submit",
 to_char(l.targetdate,'DD/MM/YYYY') as "Tanggal Tujuan Laporan",
-l.lokasi as lokasi,
+l.lokasi as lokasi, 
 TO_CHAR(l.jam::time , 'HH24:MI') as "Jam Mengisi",
 TO_CHAR(l.jamtarget::time , 'HH24:MI') as "Jam Kerja",
 l.keterangan as keterangan,
