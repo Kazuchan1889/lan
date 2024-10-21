@@ -271,20 +271,7 @@ function processCondition(condition,fotomasuk,fotokeluar, id, date, res) {
       }
     );
   } else if (condition == "keluar") {
-    const checkStatus = new Date();
-    checkStatus.setUTCHours(check.jamKeluar.jam);
-    checkStatus.setUTCMinutes(check.jamKeluar.menit);
-    if (date < checkStatus) {
-      return res
-        .status(200)
-        .send(
-          `check out dapat dilakukan setelah jam\n${check.jamKeluar.jam}:${
-            check.jamKeluar.menit > 10
-              ? check.jamKeluar.menit
-              : `0${check.jamKeluar.menit}`
-          }`
-        );
-    }
+    // Hilangkan pengecekan waktu agar user bisa check-out kapan saja
     pool.query(
       "select * from absensi where idk =$1 and date = $2 and keluar is not null",
       [id, date],
