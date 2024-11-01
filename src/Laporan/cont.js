@@ -70,7 +70,7 @@ const getLaporan = (req, res) => {
 
 //
 const getLaporanSelf = (req, res) => {
-    
+  if (check.checkOperation("SELF_FORM", req.userOperation, res)) return;
 
   const id = req.userId;
   pool.query(queries.getLaporanSelf, [id], async (err, result) => {

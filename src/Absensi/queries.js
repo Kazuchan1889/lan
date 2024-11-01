@@ -3,6 +3,7 @@ const getAbsensi = "select * from absensi";
 const getAbsensiDated = `
   select
   ab.id as id,
+  ab.fotomasuk as fotomasuk,
   kn.nama as nama,
   kn.dokumen as photo,
   TO_CHAR(ab.masuk::time, 'HH24:MI') as masuk,
